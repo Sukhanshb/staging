@@ -154,7 +154,7 @@
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(180px, 34vw, 480px);
       line-height: 1; letter-spacing: 0.04em;
-      -webkit-text-stroke: 1px rgba(255,255,255,0.07);
+      -webkit-text-stroke: 1.5px rgba(255,255,255,0.18);
       color: transparent; pointer-events: none; user-select: none;
       white-space: nowrap; z-index: 0;
     }
@@ -263,13 +263,22 @@
     }
     .gallery-slide {
       position: absolute; overflow: hidden;
-      transition: all 0.75s cubic-bezier(0.16,1,0.3,1);
+      transition:
+        left 0.75s cubic-bezier(0.16,1,0.3,1),
+        right 0.75s cubic-bezier(0.16,1,0.3,1),
+        width 0.75s cubic-bezier(0.16,1,0.3,1),
+        height 0.75s cubic-bezier(0.16,1,0.3,1),
+        transform 0.75s cubic-bezier(0.16,1,0.3,1),
+        filter 0.75s cubic-bezier(0.16,1,0.3,1),
+        box-shadow 0.75s cubic-bezier(0.16,1,0.3,1),
+        opacity 0.75s cubic-bezier(0.16,1,0.3,1);
       cursor: none;
     }
     .gallery-slide.prev {
-      width: 26%; aspect-ratio: 16/9; left: 3%;
+      width: 26%; aspect-ratio: 16/9; left: 3%; right: auto;
+      transform: none;
       filter: brightness(0.38) grayscale(40%);
-      z-index: 1;
+      z-index: 1; box-shadow: none; opacity: 1;
     }
     .gallery-slide.active {
       width: 54%; aspect-ratio: 16/9;
@@ -277,11 +286,22 @@
       filter: brightness(1) grayscale(0%);
       z-index: 3;
       box-shadow: 0 40px 120px rgba(0,0,0,0.7);
+      opacity: 1;
     }
     .gallery-slide.next {
       width: 26%; aspect-ratio: 16/9; right: 3%; left: auto;
+      transform: none;
       filter: brightness(0.38) grayscale(40%);
-      z-index: 1;
+      z-index: 1; box-shadow: none; opacity: 1;
+    }
+    /* Exiting slide flies off screen */
+    .gallery-slide.exit-left {
+      width: 14%; left: -8%; opacity: 0;
+      filter: brightness(0.2); z-index: 0;
+    }
+    .gallery-slide.exit-right {
+      width: 14%; left: auto; right: -8%; opacity: 0;
+      filter: brightness(0.2); z-index: 0;
     }
     .gallery-slide img {
       width: 100%; height: 100%; object-fit: cover; display: block;
@@ -289,8 +309,10 @@
       transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
     }
     .gallery-slide.active:hover img { transform: scale(1.03); }
-    .gallery-slide.prev:hover,
-    .gallery-slide.next:hover { filter: brightness(0.6) grayscale(15%); cursor: none; }
+    .gallery-slide.prev,
+    .gallery-slide.next { cursor: none; }
+    .gallery-slide.prev:hover { filter: brightness(0.58) grayscale(15%); }
+    .gallery-slide.next:hover { filter: brightness(0.58) grayscale(15%); }
     .gallery-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
       z-index: 10; width: 52px; height: 52px;
@@ -317,9 +339,22 @@
     .gallery-dot {
       width: 4px; height: 4px; border-radius: 50%;
       background: var(--muted); cursor: none;
-      transition: background 0.35s, transform 0.35s, width 0.35s;
+      transition: background 0.35s, width 0.35s;
     }
     .gallery-dot.active { background: var(--accent); width: 20px; border-radius: 2px; }
+
+    /* ── MOBILE GALLERY ── */
+    @media (max-width: 768px) {
+      .gallery-carousel { height: 240px; }
+      .gallery-slide.prev, .gallery-slide.next { display: none !important; }
+      .gallery-slide.active {
+        width: 100%; left: 0; transform: none;
+        box-shadow: none;
+      }
+      .gallery-btn { opacity: 1 !important; }
+      .gallery-btn.prev-btn { left: 12px; }
+      .gallery-btn.next-btn { right: 12px; }
+    }
 
     /* ── TESTIMONIALS ── */
     .testimonials {
@@ -546,9 +581,7 @@
       .stats-grid { grid-template-columns: 1fr; }
       .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
       .stat-item:last-child { border-bottom: none; }
-      .gallery-carousel { height: 260px; }
-      .gallery-slide.active { width: 72%; }
-      .gallery-slide.prev, .gallery-slide.next { width: 20%; }
+/* gallery handled above */
       .testimonials { padding: 80px 0; }
       .testimonials::before { left: 24px; right: 24px; }
       .testimonials-header { padding: 0 24px; }
@@ -830,26 +863,88 @@
       'https://suhanishah.com/wp-content/uploads/2024/03/gallery7.jpg',
     ];
     let cur = 0, busy = false;
-    const slides = { prev: document.querySelector('.gallery-slide.prev'), active: document.querySelector('.gallery-slide.active'), next: document.querySelector('.gallery-slide.next') };
+    const prevSlide = document.querySelector('.gallery-slide.prev');
+    const activeSlide = document.querySelector('.gallery-slide.active');
+    const nextSlide = document.querySelector('.gallery-slide.next');
     const dots = document.querySelectorAll('.gallery-dot');
 
-    function setGallery() {
-      const p = (cur - 1 + imgs.length) % imgs.length;
-      const n = (cur + 1) % imgs.length;
-      slides.prev.querySelector('img').src = imgs[p];
-      slides.active.querySelector('img').src = imgs[cur];
-      slides.next.querySelector('img').src = imgs[n];
-      dots.forEach((d, i) => d.classList.toggle('active', i === cur));
-    }
     function go(dir) {
-      if (busy) return; busy = true;
-      cur = (cur + dir + imgs.length) % imgs.length;
-      setGallery();
-      setTimeout(() => busy = false, 780);
+      if (busy) return;
+      busy = true;
+
+      // Determine new indices
+      const newCur = (cur + dir + imgs.length) % imgs.length;
+      const newPrev = (newCur - 1 + imgs.length) % imgs.length;
+      const newNext = (newCur + 1) % imgs.length;
+
+      // Step 1: animate out the exiting slide
+      if (dir === 1) {
+        // Going right: prev flies out left
+        prevSlide.classList.add('exit-left');
+      } else {
+        // Going left: next flies out right
+        nextSlide.classList.add('exit-right');
+      }
+
+      // Step 2: after a short delay, swap classes and update images
+      setTimeout(() => {
+        // Clean exit classes
+        prevSlide.classList.remove('exit-left', 'exit-right');
+        nextSlide.classList.remove('exit-left', 'exit-right');
+
+        // Reassign roles
+        if (dir === 1) {
+          prevSlide.classList.remove('prev'); prevSlide.classList.add('next');
+          activeSlide.classList.remove('active'); activeSlide.classList.add('prev');
+          nextSlide.classList.remove('next'); nextSlide.classList.add('active');
+          // rotate references
+          const temp = prevSlide;
+          // We need to update the DOM order via data - just update images directly
+        } else {
+          nextSlide.classList.remove('next'); nextSlide.classList.add('prev');
+          activeSlide.classList.remove('active'); activeSlide.classList.add('next');
+          prevSlide.classList.remove('prev'); prevSlide.classList.add('active');
+        }
+
+        cur = newCur;
+
+        // Update images on all three
+        const p2 = document.querySelector('.gallery-slide.prev');
+        const a2 = document.querySelector('.gallery-slide.active');
+        const n2 = document.querySelector('.gallery-slide.next');
+        if (p2) p2.querySelector('img').src = imgs[(newCur - 1 + imgs.length) % imgs.length];
+        if (a2) a2.querySelector('img').src = imgs[newCur];
+        if (n2) n2.querySelector('img').src = imgs[(newCur + 1) % imgs.length];
+
+        dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+        setTimeout(() => { busy = false; }, 780);
+      }, 80);
     }
-    document.getElementById('galleryNext').addEventListener('click', () => go(1));
-    document.getElementById('galleryPrev').addEventListener('click', () => go(-1));
-    document.addEventListener('keydown', e => { if (e.key==='ArrowRight') go(1); if (e.key==='ArrowLeft') go(-1); });
+
+    // Click side slides to bring them center
+    document.querySelector('.gallery-slide.prev').addEventListener('click', () => go(-1));
+    document.querySelector('.gallery-slide.next').addEventListener('click', () => go(1));
+
+    // Re-bind after each transition since class names swap
+    function rebindSideClicks() {
+      document.querySelectorAll('.gallery-slide.prev, .gallery-slide.next').forEach(slide => {
+        slide.replaceWith(slide.cloneNode(true)); // remove old listeners
+      });
+      const p = document.querySelector('.gallery-slide.prev');
+      const n = document.querySelector('.gallery-slide.next');
+      if (p) p.addEventListener('click', () => go(-1));
+      if (n) n.addEventListener('click', () => go(1));
+    }
+
+    document.getElementById('galleryNext').addEventListener('click', () => { go(1); setTimeout(rebindSideClicks, 900); });
+    document.getElementById('galleryPrev').addEventListener('click', () => { go(-1); setTimeout(rebindSideClicks, 900); });
+    document.querySelector('.gallery-slide.prev').addEventListener('click', () => { go(-1); setTimeout(rebindSideClicks, 900); });
+    document.querySelector('.gallery-slide.next').addEventListener('click', () => { go(1); setTimeout(rebindSideClicks, 900); });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') { go(1); setTimeout(rebindSideClicks, 900); }
+      if (e.key === 'ArrowLeft')  { go(-1); setTimeout(rebindSideClicks, 900); }
+    });
 
     // Touch / swipe
     let tx = 0, ty = 0;
@@ -858,7 +953,7 @@
     gc.addEventListener('touchend', e => {
       const dx = tx - e.changedTouches[0].clientX;
       const dy = Math.abs(ty - e.changedTouches[0].clientY);
-      if (Math.abs(dx) > 44 && dy < 80) go(dx > 0 ? 1 : -1);
+      if (Math.abs(dx) > 44 && dy < 80) { go(dx > 0 ? 1 : -1); setTimeout(rebindSideClicks, 900); }
     });
   </script>
 </body>
