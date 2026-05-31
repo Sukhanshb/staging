@@ -29,6 +29,32 @@
       cursor: none;
     }
 
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .reveal.delay-1 { transition-delay: 0.1s; }
+    .reveal.delay-2 { transition-delay: 0.2s; }
+    .reveal.delay-3 { transition-delay: 0.3s; }
+    .reveal.delay-4 { transition-delay: 0.4s; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.9s cubic-bezier(0.4, 0, 0.2, 1), transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
     .cursor {
       position: fixed;
       width: 8px; height: 8px;
@@ -777,7 +803,7 @@
       <button class="gallery-btn prev-btn" id="galleryPrev"></button>
       <button class="gallery-btn next-btn" id="galleryNext"></button>
     </div>
-    <div class="gallery-dots" id="galleryDots">
+    <div class="gallery-dots reveal" id="galleryDots">
       <div class="gallery-dot active"></div>
       <div class="gallery-dot"></div>
       <div class="gallery-dot"></div>
@@ -808,7 +834,7 @@
 
   <!-- TESTIMONIALS -->
   <section class="testimonials" id="testimonials">
-    <div class="testimonials-header">
+    <div class="testimonials-header reveal">
       <div class="section-label">Recognition</div>
       <h2 class="testimonials-heading">What they <em>said.</em></h2>
     </div>
@@ -901,7 +927,7 @@
 
   <!-- VIDEOS -->
   <section class="videos" id="videos">
-    <div class="videos-header">
+    <div class="videos-header reveal">
       <div>
         <div class="section-label">YouTube</div>
         <h2 class="videos-heading">Watch the <em>work.</em></h2>
@@ -909,7 +935,7 @@
       <a href="https://www.youtube.com/@SuhaniShah" target="_blank" class="videos-link">View All →</a>
     </div>
     <div class="videos-grid">
-      <a href="https://www.youtube.com/watch?v=6tGPXA6V4sY" target="_blank" class="video-card">
+      <a href="https://www.youtube.com/watch?v=6tGPXA6V4sY" target="_blank" class="video-card reveal delay-1">
         <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/6tGPXA6V4sY/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
@@ -919,7 +945,7 @@
           </div>
         </div>
       </a>
-      <a href="https://www.youtube.com/watch?v=rJnG_Tv67j0" target="_blank" class="video-card">
+      <a href="https://www.youtube.com/watch?v=rJnG_Tv67j0" target="_blank" class="video-card reveal delay-2">
         <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/rJnG_Tv67j0/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
@@ -929,7 +955,7 @@
           </div>
         </div>
       </a>
-      <a href="https://www.youtube.com/watch?v=5EYUO1fWH08" target="_blank" class="video-card">
+      <a href="https://www.youtube.com/watch?v=5EYUO1fWH08" target="_blank" class="video-card reveal delay-3">
         <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/5EYUO1fWH08/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
@@ -939,7 +965,7 @@
           </div>
         </div>
       </a>
-      <a href="https://www.youtube.com/watch?v=TMqsa5cCfvM" target="_blank" class="video-card">
+      <a href="https://www.youtube.com/watch?v=TMqsa5cCfvM" target="_blank" class="video-card reveal delay-1">
         <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/TMqsa5cCfvM/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
@@ -949,7 +975,7 @@
           </div>
         </div>
       </a>
-      <a href="https://www.youtube.com/watch?v=OBBZLEtKbOw" target="_blank" class="video-card">
+      <a href="https://www.youtube.com/watch?v=OBBZLEtKbOw" target="_blank" class="video-card reveal delay-2">
         <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/OBBZLEtKbOw/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
@@ -959,7 +985,7 @@
           </div>
         </div>
       </a>
-      <a href="https://www.youtube.com/watch?v=ylm2BO1UQwM" target="_blank" class="video-card">
+      <a href="https://www.youtube.com/watch?v=ylm2BO1UQwM" target="_blank" class="video-card reveal delay-3">
         <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/ylm2BO1UQwM/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
@@ -974,7 +1000,7 @@
 
   <!-- PRESS -->
   <section class="press" id="press">
-    <div class="press-header">
+    <div class="press-header reveal">
       <div class="section-label">Press</div>
       <h2 class="press-heading">In the <em>news.</em></h2>
     </div>
@@ -1014,9 +1040,9 @@
 
   <!-- CTA -->
   <section class="cta-section">
-    <p class="cta-eyebrow">Work</p>
-    <h2 class="cta-heading">See the work<br>behind the <em>scenes.</em></h2>
-    <a href="shotlist.html" class="btn-shotlist">
+    <p class="cta-eyebrow reveal">Work</p>
+    <h2 class="cta-heading reveal delay-1">See the work<br>behind the <em>scenes.</em></h2>
+    <a href="shotlist.html" class="btn-shotlist reveal delay-2">
       <span>View Shotlist</span>
       <span class="btn-arrow">→</span>
     </a>
@@ -1076,9 +1102,9 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.1 });
 
-    document.querySelectorAll('.about-left, .about-right, .stat-item, .press-item').forEach(el => {
+    document.querySelectorAll('.about-left, .about-right, .stat-item, .press-item, .reveal, .reveal-left, .reveal-right').forEach(el => {
       observer.observe(el);
     });
 
@@ -1094,38 +1120,60 @@
       'https://suhanishah.com/wp-content/uploads/2024/03/gallery7.jpg',
     ];
     let current = 0;
+    let isAnimating = false;
     const prevSlide = document.querySelector('.gallery-slide.prev');
     const activeSlide = document.querySelector('.gallery-slide.active');
     const nextSlide = document.querySelector('.gallery-slide.next');
     const dots = document.querySelectorAll('.gallery-dot');
 
-    function updateGallery() {
+    function updateGallery(direction) {
+      if (isAnimating) return;
+      isAnimating = true;
+
       const p = (current - 1 + images.length) % images.length;
       const n = (current + 1) % images.length;
+
+      // Preload adjacent images
       prevSlide.querySelector('img').src = images[p];
       activeSlide.querySelector('img').src = images[current];
       nextSlide.querySelector('img').src = images[n];
       dots.forEach((d, i) => d.classList.toggle('active', i === current));
+
+      setTimeout(() => { isAnimating = false; }, 750);
     }
 
-    document.getElementById('galleryNext').addEventListener('click', () => {
+    function goNext() {
       current = (current + 1) % images.length;
-      updateGallery();
-    });
-    document.getElementById('galleryPrev').addEventListener('click', () => {
+      updateGallery('next');
+    }
+    function goPrev() {
       current = (current - 1 + images.length) % images.length;
-      updateGallery();
-    });
+      updateGallery('prev');
+    }
+
+    document.getElementById('galleryNext').addEventListener('click', goNext);
+    document.getElementById('galleryPrev').addEventListener('click', goPrev);
 
     // Swipe support
     let touchStartX = 0;
-    document.getElementById('galleryCarousel').addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
-    document.getElementById('galleryCarousel').addEventListener('touchend', e => {
-      const diff = touchStartX - e.changedTouches[0].clientX;
-      if (Math.abs(diff) > 50) {
-        current = diff > 0 ? (current + 1) % images.length : (current - 1 + images.length) % images.length;
-        updateGallery();
+    let touchStartY = 0;
+    const carousel = document.getElementById('galleryCarousel');
+    carousel.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    carousel.addEventListener('touchend', e => {
+      const dx = touchStartX - e.changedTouches[0].clientX;
+      const dy = Math.abs(touchStartY - e.changedTouches[0].clientY);
+      if (Math.abs(dx) > 50 && dy < 80) {
+        dx > 0 ? goNext() : goPrev();
       }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft') goPrev();
     });
   </script>
 </body>
