@@ -273,7 +273,7 @@
     .gallery-carousel {
       position: relative;
       width: 100%;
-      height: 520px;
+      height: 600px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -281,37 +281,47 @@
     }
     .gallery-slide {
       position: absolute;
-      width: 38%;
-      height: 400px;
       overflow: hidden;
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: none;
     }
     .gallery-slide.prev {
-      left: 4%;
-      transform: scale(0.88);
+      width: 28%;
+      aspect-ratio: 16/9;
+      left: 3%;
+      transform: scale(0.9);
       z-index: 1;
-      filter: brightness(0.55);
+      filter: brightness(0.45) grayscale(30%);
     }
     .gallery-slide.active {
+      width: 52%;
+      aspect-ratio: 16/9;
       left: 50%;
       transform: translateX(-50%) scale(1);
       z-index: 3;
-      filter: brightness(1);
-      height: 460px;
+      filter: brightness(1) grayscale(0%);
     }
     .gallery-slide.next {
-      right: 4%;
+      width: 28%;
+      aspect-ratio: 16/9;
+      right: 3%;
       left: auto;
-      transform: scale(0.88);
+      transform: scale(0.9);
       z-index: 1;
-      filter: brightness(0.55);
+      filter: brightness(0.45) grayscale(30%);
     }
     .gallery-slide img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
       pointer-events: none;
+      transition: transform 0.6s ease;
+    }
+    .gallery-slide.active:hover img { transform: scale(1.04); }
+    .gallery-slide.prev:hover,
+    .gallery-slide.next:hover {
+      filter: brightness(0.65) grayscale(10%);
+      transition: filter 0.3s ease;
     }
     .gallery-btn {
       position: absolute;
@@ -319,32 +329,28 @@
       transform: translateY(-50%);
       z-index: 10;
       width: 56px; height: 56px;
-      border: 1px solid rgba(200,169,110,0.4);
+      border: 1px solid rgba(200,169,110,0.5);
       border-radius: 50%;
-      background: rgba(8,8,8,0.7);
+      background: rgba(8,8,8,0.75);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: none;
       opacity: 0;
-      transition: opacity 0.3s, border-color 0.3s, background 0.3s;
+      transition: opacity 0.4s, border-color 0.3s, background 0.3s;
     }
     .gallery-btn::after {
       content: '';
-      width: 8px; height: 8px;
-      border-right: 1px solid var(--accent);
-      border-top: 1px solid var(--accent);
+      width: 9px; height: 9px;
+      border-right: 1.5px solid var(--accent);
+      border-top: 1.5px solid var(--accent);
     }
-    .gallery-btn.prev-btn {
-      left: 24px;
-    }
+    .gallery-btn.prev-btn { left: 24px; }
     .gallery-btn.prev-btn::after { transform: rotate(-135deg); margin-left: 3px; }
-    .gallery-btn.next-btn {
-      right: 24px;
-    }
+    .gallery-btn.next-btn { right: 24px; }
     .gallery-btn.next-btn::after { transform: rotate(45deg); margin-right: 3px; }
     .gallery-carousel:hover .gallery-btn { opacity: 1; }
-    .gallery-btn:hover { border-color: var(--accent); background: rgba(8,8,8,0.9); }
+    .gallery-btn:hover { border-color: var(--accent); background: rgba(8,8,8,0.95); }
     .gallery-dots {
       display: flex;
       justify-content: center;
@@ -407,7 +413,7 @@
     .testimonials-track {
       display: flex;
       gap: 24px;
-      animation: scrollLeft 40s linear infinite;
+      animation: scrollLeft 70s linear infinite;
       width: max-content;
     }
     .testimonials-track:hover { animation-play-state: paused; }
@@ -511,6 +517,18 @@
       transition: border-color 0.3s;
     }
     .video-card:hover { border-color: rgba(200,169,110,0.3); }
+    .video-thumb {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(30%) brightness(0.6);
+      transition: filter 0.4s ease, transform 0.5s ease;
+    }
+    .video-card:hover .video-thumb {
+      filter: grayscale(0%) brightness(0.75);
+      transform: scale(1.04);
+    }
     .video-card-inner {
       position: absolute;
       inset: 0;
@@ -892,6 +910,7 @@
     </div>
     <div class="videos-grid">
       <a href="https://www.youtube.com/watch?v=6tGPXA6V4sY" target="_blank" class="video-card">
+        <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/6tGPXA6V4sY/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
           <div class="video-bottom">
@@ -901,6 +920,7 @@
         </div>
       </a>
       <a href="https://www.youtube.com/watch?v=rJnG_Tv67j0" target="_blank" class="video-card">
+        <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/rJnG_Tv67j0/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
           <div class="video-bottom">
@@ -910,6 +930,7 @@
         </div>
       </a>
       <a href="https://www.youtube.com/watch?v=5EYUO1fWH08" target="_blank" class="video-card">
+        <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/5EYUO1fWH08/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
           <div class="video-bottom">
@@ -919,6 +940,7 @@
         </div>
       </a>
       <a href="https://www.youtube.com/watch?v=TMqsa5cCfvM" target="_blank" class="video-card">
+        <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/TMqsa5cCfvM/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
           <div class="video-bottom">
@@ -928,6 +950,7 @@
         </div>
       </a>
       <a href="https://www.youtube.com/watch?v=OBBZLEtKbOw" target="_blank" class="video-card">
+        <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/OBBZLEtKbOw/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
           <div class="video-bottom">
@@ -937,6 +960,7 @@
         </div>
       </a>
       <a href="https://www.youtube.com/watch?v=ylm2BO1UQwM" target="_blank" class="video-card">
+        <div class="video-thumb" style="background-image:url('https://i.ytimg.com/vi/ylm2BO1UQwM/hqdefault.jpg')"></div>
         <div class="video-card-inner">
           <div class="video-play"></div>
           <div class="video-bottom">
