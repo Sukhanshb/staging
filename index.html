@@ -257,62 +257,61 @@
     /* ── GALLERY ── */
     .gallery { padding: 0 0 140px; position: relative; }
     .gallery-carousel {
-      position: relative; width: 100%; height: 620px;
-      display: flex; align-items: center; justify-content: center;
+      position: relative; width: 100%; height: 600px;
       overflow: hidden;
     }
+    /* All slides use transform-based positioning from center */
     .gallery-slide {
-      position: absolute; overflow: hidden;
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 54%; aspect-ratio: 16/9;
+      overflow: hidden;
+      cursor: none;
+      will-change: transform, filter, opacity;
       transition:
-        left 0.75s cubic-bezier(0.16,1,0.3,1),
-        right 0.75s cubic-bezier(0.16,1,0.3,1),
-        width 0.75s cubic-bezier(0.16,1,0.3,1),
-        height 0.75s cubic-bezier(0.16,1,0.3,1),
         transform 0.75s cubic-bezier(0.16,1,0.3,1),
         filter 0.75s cubic-bezier(0.16,1,0.3,1),
-        box-shadow 0.75s cubic-bezier(0.16,1,0.3,1),
-        opacity 0.75s cubic-bezier(0.16,1,0.3,1);
-      cursor: none;
+        opacity 0.75s cubic-bezier(0.16,1,0.3,1),
+        box-shadow 0.75s cubic-bezier(0.16,1,0.3,1);
     }
-    .gallery-slide.prev {
-      width: 26%; aspect-ratio: 16/9; left: 3%; right: auto;
-      transform: none;
-      filter: brightness(0.38) grayscale(40%);
-      z-index: 1; box-shadow: none; opacity: 1;
-    }
-    .gallery-slide.active {
-      width: 54%; aspect-ratio: 16/9;
-      left: 50%; transform: translateX(-50%);
+    /* slot positions — translateX(-50%,-50%) is the center baseline */
+    /* active: center */
+    .gallery-slide[data-slot="0"] {
+      transform: translate(-50%, -50%) translateX(0) scale(1);
       filter: brightness(1) grayscale(0%);
-      z-index: 3;
-      box-shadow: 0 40px 120px rgba(0,0,0,0.7);
-      opacity: 1;
+      z-index: 3; opacity: 1;
+      box-shadow: 0 40px 120px rgba(0,0,0,0.65);
     }
-    .gallery-slide.next {
-      width: 26%; aspect-ratio: 16/9; right: 3%; left: auto;
-      transform: none;
+    /* prev: left */
+    .gallery-slide[data-slot="-1"] {
+      transform: translate(-50%, -50%) translateX(-125%) scale(0.72);
       filter: brightness(0.38) grayscale(40%);
-      z-index: 1; box-shadow: none; opacity: 1;
+      z-index: 1; opacity: 1; box-shadow: none;
     }
-    /* Exiting slide flies off screen */
-    .gallery-slide.exit-left {
-      width: 14%; left: -8%; opacity: 0;
-      filter: brightness(0.2); z-index: 0;
+    /* next: right */
+    .gallery-slide[data-slot="1"] {
+      transform: translate(-50%, -50%) translateX(125%) scale(0.72);
+      filter: brightness(0.38) grayscale(40%);
+      z-index: 1; opacity: 1; box-shadow: none;
     }
-    .gallery-slide.exit-right {
-      width: 14%; left: auto; right: -8%; opacity: 0;
-      filter: brightness(0.2); z-index: 0;
+    /* far left — hidden off screen */
+    .gallery-slide[data-slot="-2"] {
+      transform: translate(-50%, -50%) translateX(-230%) scale(0.5);
+      filter: brightness(0.1); z-index: 0; opacity: 0;
+    }
+    /* far right — hidden off screen */
+    .gallery-slide[data-slot="2"] {
+      transform: translate(-50%, -50%) translateX(230%) scale(0.5);
+      filter: brightness(0.1); z-index: 0; opacity: 0;
     }
     .gallery-slide img {
       width: 100%; height: 100%; object-fit: cover; display: block;
       pointer-events: none;
       transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
     }
-    .gallery-slide.active:hover img { transform: scale(1.03); }
-    .gallery-slide.prev,
-    .gallery-slide.next { cursor: none; }
-    .gallery-slide.prev:hover { filter: brightness(0.58) grayscale(15%); }
-    .gallery-slide.next:hover { filter: brightness(0.58) grayscale(15%); }
+    .gallery-slide[data-slot="0"]:hover img { transform: scale(1.03); }
+    .gallery-slide[data-slot="-1"]:hover,
+    .gallery-slide[data-slot="1"]:hover { filter: brightness(0.58) grayscale(15%); cursor: pointer; }
     .gallery-btn {
       position: absolute; top: 50%; transform: translateY(-50%);
       z-index: 10; width: 52px; height: 52px;
@@ -345,11 +344,13 @@
 
     /* ── MOBILE GALLERY ── */
     @media (max-width: 768px) {
-      .gallery-carousel { height: 240px; }
-      .gallery-slide.prev, .gallery-slide.next { display: none !important; }
-      .gallery-slide.active {
-        width: 100%; left: 0; transform: none;
-        box-shadow: none;
+      .gallery-carousel { height: 220px; }
+      .gallery-slide[data-slot="-1"],
+      .gallery-slide[data-slot="1"],
+      .gallery-slide[data-slot="-2"],
+      .gallery-slide[data-slot="2"] { opacity: 0 !important; pointer-events: none; }
+      .gallery-slide[data-slot="0"] {
+        width: 92%; box-shadow: none;
       }
       .gallery-btn { opacity: 1 !important; }
       .gallery-btn.prev-btn { left: 12px; }
@@ -667,15 +668,11 @@
   <!-- GALLERY -->
   <div class="gallery">
     <div class="gallery-carousel" id="galleryCarousel">
-      <div class="gallery-slide prev">
-        <img src="https://suhanishah.com/wp-content/uploads/2024/03/gallery7.jpg" alt="Show" />
-      </div>
-      <div class="gallery-slide active">
-        <img src="https://suhanishah.com/wp-content/uploads/2023/06/gallery1-1.jpg" alt="Show" />
-      </div>
-      <div class="gallery-slide next">
-        <img src="https://suhanishah.com/wp-content/uploads/2023/06/gallery2-1.jpg" alt="Show" />
-      </div>
+      <div class="gallery-slide" data-slot="-2"><img src="" alt="Show" /></div>
+      <div class="gallery-slide" data-slot="-1"><img src="" alt="Show" /></div>
+      <div class="gallery-slide" data-slot="0"><img src="" alt="Show" /></div>
+      <div class="gallery-slide" data-slot="1"><img src="" alt="Show" /></div>
+      <div class="gallery-slide" data-slot="2"><img src="" alt="Show" /></div>
       <button class="gallery-btn prev-btn" id="galleryPrev" aria-label="Previous"></button>
       <button class="gallery-btn next-btn" id="galleryNext" aria-label="Next"></button>
     </div>
@@ -863,97 +860,59 @@
       'https://suhanishah.com/wp-content/uploads/2024/03/gallery7.jpg',
     ];
     let cur = 0, busy = false;
-    const prevSlide = document.querySelector('.gallery-slide.prev');
-    const activeSlide = document.querySelector('.gallery-slide.active');
-    const nextSlide = document.querySelector('.gallery-slide.next');
     const dots = document.querySelectorAll('.gallery-dot');
+    const slots = [-2, -1, 0, 1, 2];
+
+    function getSlideEl(slot) {
+      return document.querySelector(`.gallery-slide[data-slot="${slot}"]`);
+    }
+
+    function renderGallery() {
+      slots.forEach(slot => {
+        const el = getSlideEl(slot);
+        if (!el) return;
+        const idx = ((cur + slot) % imgs.length + imgs.length) % imgs.length;
+        el.querySelector('img').src = imgs[idx];
+      });
+      dots.forEach((d, i) => d.classList.toggle('active', i === cur));
+    }
 
     function go(dir) {
       if (busy) return;
       busy = true;
-
-      // Determine new indices
-      const newCur = (cur + dir + imgs.length) % imgs.length;
-      const newPrev = (newCur - 1 + imgs.length) % imgs.length;
-      const newNext = (newCur + 1) % imgs.length;
-
-      // Step 1: animate out the exiting slide
-      if (dir === 1) {
-        // Going right: prev flies out left
-        prevSlide.classList.add('exit-left');
-      } else {
-        // Going left: next flies out right
-        nextSlide.classList.add('exit-right');
-      }
-
-      // Step 2: after a short delay, swap classes and update images
-      setTimeout(() => {
-        // Clean exit classes
-        prevSlide.classList.remove('exit-left', 'exit-right');
-        nextSlide.classList.remove('exit-left', 'exit-right');
-
-        // Reassign roles
-        if (dir === 1) {
-          prevSlide.classList.remove('prev'); prevSlide.classList.add('next');
-          activeSlide.classList.remove('active'); activeSlide.classList.add('prev');
-          nextSlide.classList.remove('next'); nextSlide.classList.add('active');
-          // rotate references
-          const temp = prevSlide;
-          // We need to update the DOM order via data - just update images directly
-        } else {
-          nextSlide.classList.remove('next'); nextSlide.classList.add('prev');
-          activeSlide.classList.remove('active'); activeSlide.classList.add('next');
-          prevSlide.classList.remove('prev'); prevSlide.classList.add('active');
-        }
-
-        cur = newCur;
-
-        // Update images on all three
-        const p2 = document.querySelector('.gallery-slide.prev');
-        const a2 = document.querySelector('.gallery-slide.active');
-        const n2 = document.querySelector('.gallery-slide.next');
-        if (p2) p2.querySelector('img').src = imgs[(newCur - 1 + imgs.length) % imgs.length];
-        if (a2) a2.querySelector('img').src = imgs[newCur];
-        if (n2) n2.querySelector('img').src = imgs[(newCur + 1) % imgs.length];
-
-        dots.forEach((d, i) => d.classList.toggle('active', i === cur));
-        setTimeout(() => { busy = false; }, 780);
-      }, 80);
+      cur = (cur + dir + imgs.length) % imgs.length;
+      renderGallery();
+      setTimeout(() => { busy = false; }, 780);
     }
 
-    // Click side slides to bring them center
-    document.querySelector('.gallery-slide.prev').addEventListener('click', () => go(-1));
-    document.querySelector('.gallery-slide.next').addEventListener('click', () => go(1));
+    // Init
+    renderGallery();
 
-    // Re-bind after each transition since class names swap
-    function rebindSideClicks() {
-      document.querySelectorAll('.gallery-slide.prev, .gallery-slide.next').forEach(slide => {
-        slide.replaceWith(slide.cloneNode(true)); // remove old listeners
-      });
-      const p = document.querySelector('.gallery-slide.prev');
-      const n = document.querySelector('.gallery-slide.next');
-      if (p) p.addEventListener('click', () => go(-1));
-      if (n) n.addEventListener('click', () => go(1));
-    }
+    document.getElementById('galleryNext').addEventListener('click', () => go(1));
+    document.getElementById('galleryPrev').addEventListener('click', () => go(-1));
 
-    document.getElementById('galleryNext').addEventListener('click', () => { go(1); setTimeout(rebindSideClicks, 900); });
-    document.getElementById('galleryPrev').addEventListener('click', () => { go(-1); setTimeout(rebindSideClicks, 900); });
-    document.querySelector('.gallery-slide.prev').addEventListener('click', () => { go(-1); setTimeout(rebindSideClicks, 900); });
-    document.querySelector('.gallery-slide.next').addEventListener('click', () => { go(1); setTimeout(rebindSideClicks, 900); });
-
-    document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight') { go(1); setTimeout(rebindSideClicks, 900); }
-      if (e.key === 'ArrowLeft')  { go(-1); setTimeout(rebindSideClicks, 900); }
+    // Click side slides
+    document.getElementById('galleryCarousel').addEventListener('click', e => {
+      const slide = e.target.closest('.gallery-slide');
+      if (!slide) return;
+      const slot = parseInt(slide.getAttribute('data-slot'));
+      if (slot === -1) go(-1);
+      if (slot === 1) go(1);
     });
 
-    // Touch / swipe
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'ArrowLeft') go(-1);
+    });
+
+        // Touch / swipe
     let tx = 0, ty = 0;
     const gc = document.getElementById('galleryCarousel');
     gc.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
     gc.addEventListener('touchend', e => {
       const dx = tx - e.changedTouches[0].clientX;
       const dy = Math.abs(ty - e.changedTouches[0].clientY);
-      if (Math.abs(dx) > 44 && dy < 80) { go(dx > 0 ? 1 : -1); setTimeout(rebindSideClicks, 900); }
+      if (Math.abs(dx) > 44 && dy < 80) go(dx > 0 ? 1 : -1);
     });
   </script>
 </body>
