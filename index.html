@@ -111,6 +111,53 @@
     .nav-links a:hover { color: var(--accent); }
     .nav-links a:hover::after { width: 100%; }
 
+    /* ── MOBILE NAV ── */
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: none; z-index: 1; padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block; width: 24px; height: 1px;
+      background: rgba(255,255,255,0.5);
+      transition: transform 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.35s, background 0.3s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); background: var(--accent); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); background: var(--accent); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed; inset: 0; z-index: 150;
+      background: rgba(6,6,6,0.97);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 8px; opacity: 0;
+      transition: opacity 0.4s cubic-bezier(0.16,1,0.3,1);
+      pointer-events: none;
+    }
+    .mobile-menu.open { opacity: 1; pointer-events: all; }
+    .mobile-menu a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 12vw, 72px);
+      letter-spacing: 0.06em; color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.3s, transform 0.3s;
+      transform: translateY(20px); opacity: 0;
+      transition: color 0.3s, transform 0.5s cubic-bezier(0.16,1,0.3,1), opacity 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .mobile-menu.open a { transform: translateY(0); opacity: 1; }
+    .mobile-menu.open a:nth-child(1) { transition-delay: 0.05s; }
+    .mobile-menu.open a:nth-child(2) { transition-delay: 0.1s; }
+    .mobile-menu.open a:nth-child(3) { transition-delay: 0.15s; }
+    .mobile-menu.open a:nth-child(4) { transition-delay: 0.2s; }
+    .mobile-menu a:hover { color: var(--accent); }
+    .mobile-menu-close {
+      position: absolute; top: 24px; right: 24px;
+      font-family: 'DM Mono', monospace; font-size: 9px;
+      letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase;
+      cursor: none; background: none; border: none;
+    }
+
     /* ── HERO ── */
     .hero {
       min-height: 100vh; position: relative;
@@ -485,28 +532,52 @@
     .press-heading em { font-style: italic; color: var(--accent); }
     .press-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3px; }
     .press-item {
-      border: 1px solid var(--border); padding: 36px 32px;
-      text-decoration: none; display: flex; flex-direction: column; gap: 0;
-      transition: background 0.35s, border-color 0.35s;
+      border: 1px solid var(--border);
+      text-decoration: none; display: flex; flex-direction: column;
       opacity: 0; transform: translateY(20px);
       transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1), background 0.35s, border-color 0.35s;
+      overflow: hidden;
     }
     .press-item.in { opacity: 1; transform: translateY(0); }
     .press-item:hover { background: rgba(200,169,110,0.04); border-color: var(--border-warm); }
+    .press-thumb {
+      width: 100%; height: 160px;
+      background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+    .press-thumb img {
+      width: 100%; height: 100%; object-fit: cover;
+      filter: grayscale(20%);
+      transition: filter 0.4s, transform 0.5s cubic-bezier(0.16,1,0.3,1);
+    }
+    .press-item:hover .press-thumb img { filter: grayscale(0%); transform: scale(1.04); }
+    .press-thumb-logo {
+      position: absolute; bottom: 12px; left: 16px;
+      font-family: 'DM Mono', monospace; font-size: 9px;
+      letter-spacing: 0.22em; color: #fff; text-transform: uppercase;
+      background: rgba(6,6,6,0.7); padding: 4px 10px;
+      backdrop-filter: blur(4px);
+    }
+    .press-body { padding: 28px 28px 24px; display: flex; flex-direction: column; flex: 1; }
     .press-name {
       font-family: 'DM Mono', monospace; font-size: 9px;
-      letter-spacing: 0.22em; color: var(--accent); text-transform: uppercase; margin-bottom: 18px;
+      letter-spacing: 0.22em; color: var(--accent); text-transform: uppercase; margin-bottom: 14px;
     }
     .press-headline {
       font-size: 16px; font-weight: 300; line-height: 1.65;
       color: var(--text-dim); flex: 1;
     }
     .press-arrow {
-      margin-top: 24px; font-family: 'DM Mono', monospace; font-size: 9px;
+      margin-top: 20px; font-family: 'DM Mono', monospace; font-size: 9px;
       color: var(--muted); letter-spacing: 0.12em;
       transition: color 0.3s, transform 0.3s; display: inline-block;
     }
     .press-item:hover .press-arrow { color: var(--accent); transform: translateX(4px); }
+    @media (max-width: 768px) {
+      .press-grid { grid-template-columns: 1fr; }
+    }
 
     /* ── CTA ── */
     .cta-section {
@@ -574,6 +645,8 @@
       nav { padding: 20px 24px; }
       nav.scrolled { padding: 14px 24px; }
       .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .mobile-menu { display: flex; }
       .hero { padding: 0 24px 56px; }
       .hero-scroll { display: none; }
       .about { grid-template-columns: 1fr; gap: 40px; padding: 100px 24px; }
@@ -612,7 +685,19 @@
       <li><a href="#press">Press</a></li>
       <li><a href="shotlist.html">Shotlist</a></li>
     </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-menu-close" id="mobileMenuClose">Close</button>
+    <a href="#about" class="mobile-menu-link">About</a>
+    <a href="#videos" class="mobile-menu-link">Videos</a>
+    <a href="#press" class="mobile-menu-link">Press</a>
+    <a href="shotlist.html" class="mobile-menu-link">Shotlist</a>
+  </div>
 
   <!-- HERO -->
   <section class="hero" id="hero">
@@ -761,22 +846,70 @@
     </div>
     <div class="press-grid">
       <a href="https://www.theguardian.com/stage/2023/aug/14/edinburghs-superstar-magicians-on-secrets-and-surprises-you-have-to-be-very-good-at-lying" target="_blank" class="press-item">
-        <div class="press-name">The Guardian</div><div class="press-headline">Edinburgh's superstar magicians on secrets and surprises: 'You have to be very good at lying'</div><div class="press-arrow">Read Article →</div>
+        <div class="press-thumb">
+          <img src="https://suhanishah.com/wp-content/uploads/2024/02/image.png" alt="The Guardian" />
+          <span class="press-thumb-logo">The Guardian</span>
+        </div>
+        <div class="press-body">
+          <div class="press-name">The Guardian</div>
+          <div class="press-headline">Edinburgh's superstar magicians on secrets and surprises: 'You have to be very good at lying'</div>
+          <div class="press-arrow">Read Article →</div>
+        </div>
       </a>
       <a href="https://www.news18.com/news/lifestyle/mentalist-suhani-shah-announces-her-silver-jubilee-india-tour-5869855.html" target="_blank" class="press-item">
-        <div class="press-name">News 18</div><div class="press-headline">Suhani Shah made history by being the first female mentalist, illusionist, and magician in India 25 years ago.</div><div class="press-arrow">Read Article →</div>
+        <div class="press-thumb">
+          <img src="https://suhanishah.com/wp-content/uploads/2023/01/Screenshot-2023-06-29-at-2.40-1.png" alt="News 18" />
+          <span class="press-thumb-logo">News 18</span>
+        </div>
+        <div class="press-body">
+          <div class="press-name">News 18</div>
+          <div class="press-headline">Suhani Shah made history by being the first female mentalist, illusionist, and magician in India 25 years ago.</div>
+          <div class="press-arrow">Read Article →</div>
+        </div>
       </a>
       <a href="https://worldmagicreview.com/2023/08/06/suhani-shah-spellbound/" target="_blank" class="press-item">
-        <div class="press-name">World Magic Review</div><div class="press-headline">Suhani Shah gets candid about her rise to fame, performing magic virtually, and what Delhiites can expect.</div><div class="press-arrow">Read Article →</div>
+        <div class="press-thumb">
+          <img src="https://suhanishah.com/wp-content/uploads/2023/06/gallery5-1_1900x1140.webp" alt="World Magic Review" />
+          <span class="press-thumb-logo">World Magic Review</span>
+        </div>
+        <div class="press-body">
+          <div class="press-name">World Magic Review</div>
+          <div class="press-headline">Suhani Shah gets candid about her rise to fame, performing magic virtually, and what Delhiites can expect.</div>
+          <div class="press-arrow">Read Article →</div>
+        </div>
       </a>
       <a href="https://economictimes.indiatimes.com/magazines/panache/what-is-a-mentalist-illusionist-magician-suhani-shah-has-the-answers/articleshow/96006048.cms" target="_blank" class="press-item">
-        <div class="press-name">Economic Times</div><div class="press-headline">What is a mentalist? Illusionist & magician Suhani Shah has the answers.</div><div class="press-arrow">Read Article →</div>
+        <div class="press-thumb">
+          <img src="https://suhanishah.com/wp-content/uploads/2023/06/Frame-234.png" alt="Economic Times" />
+          <span class="press-thumb-logo">Economic Times</span>
+        </div>
+        <div class="press-body">
+          <div class="press-name">Economic Times</div>
+          <div class="press-headline">What is a mentalist? Illusionist & magician Suhani Shah has the answers.</div>
+          <div class="press-arrow">Read Article →</div>
+        </div>
       </a>
       <a href="https://timesofindia.indiatimes.com/life-style/spotlight/my-shows-tell-people-a-lot-about-themselves-says-mentalist-suhani-shah/articleshow/95427376.cms" target="_blank" class="press-item">
-        <div class="press-name">Times of India</div><div class="press-headline">My shows tell people a lot about themselves, says mentalist Suhani Shah, who completed 25 years in magic.</div><div class="press-arrow">Read Article →</div>
+        <div class="press-thumb">
+          <img src="https://suhanishah.com/wp-content/uploads/2023/06/Frame-236.png" alt="Times of India" />
+          <span class="press-thumb-logo">Times of India</span>
+        </div>
+        <div class="press-body">
+          <div class="press-name">Times of India</div>
+          <div class="press-headline">My shows tell people a lot about themselves, says mentalist Suhani Shah, who completed 25 years in magic.</div>
+          <div class="press-arrow">Read Article →</div>
+        </div>
       </a>
       <a href="https://www.thehindu.com/life-and-style/leisure/mentalist-suhani-shah-is-all-set-to-mesmerise-bangaloreans/article65970971.ece" target="_blank" class="press-item">
-        <div class="press-name">The Hindu</div><div class="press-headline">Mentalist Suhani Shah is all set to mesmerise Bangaloreans.</div><div class="press-arrow">Read Article →</div>
+        <div class="press-thumb">
+          <img src="https://suhanishah.com/wp-content/uploads/2023/06/Frame-232.png" alt="The Hindu" />
+          <span class="press-thumb-logo">The Hindu</span>
+        </div>
+        <div class="press-body">
+          <div class="press-name">The Hindu</div>
+          <div class="press-headline">Mentalist Suhani Shah is all set to mesmerise Bangaloreans.</div>
+          <div class="press-arrow">Read Article →</div>
+        </div>
       </a>
     </div>
   </section>
@@ -798,6 +931,23 @@
   </footer>
 
   <script>
+    // ── MOBILE MENU ──
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileMenuClose');
+
+    function toggleMenu(open) {
+      hamburger.classList.toggle('open', open);
+      mobileMenu.classList.toggle('open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    hamburger.addEventListener('click', () => toggleMenu(!mobileMenu.classList.contains('open')));
+    mobileClose.addEventListener('click', () => toggleMenu(false));
+    document.querySelectorAll('.mobile-menu-link').forEach(link => {
+      link.addEventListener('click', () => toggleMenu(false));
+    });
+
     // ── CURSOR ──
     const cursor = document.getElementById('cursor');
     const ring = document.getElementById('cursorRing');
