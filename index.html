@@ -445,6 +445,13 @@
       width: max-content;
     }
     .testimonials-track:hover { animation-play-state: paused; }
+    @media (max-width: 768px) {
+      .testimonials-track {
+        animation-duration: 40s;
+        gap: 14px;
+      }
+      .testimonial-card { width: 280px; padding: 28px 24px 24px; }
+    }
     @keyframes scrollLeft {
       from { transform: translateX(0); }
       to { transform: translateX(-50%); }
@@ -556,7 +563,7 @@
     .press-item.in { opacity: 1; transform: translateY(0); }
     .press-item:hover { background: rgba(200,169,110,0.04); border-color: var(--border-warm); }
     .press-thumb {
-      width: 100%; height: 160px;
+      width: 100%; height: 200px;
       background: var(--surface);
       display: flex; align-items: center; justify-content: center;
       overflow: hidden; position: relative;
@@ -564,6 +571,7 @@
     }
     .press-thumb img {
       width: 100%; height: 100%; object-fit: cover;
+      object-position: center top;
       filter: grayscale(20%);
       transition: filter 0.4s, transform 0.5s cubic-bezier(0.16,1,0.3,1);
     }
@@ -873,7 +881,7 @@
     <div class="press-grid">
       <a href="https://www.theguardian.com/stage/2023/aug/14/edinburghs-superstar-magicians-on-secrets-and-surprises-you-have-to-be-very-good-at-lying" target="_blank" class="press-item">
         <div class="press-thumb">
-          <img src="https://suhanishah.com/wp-content/uploads/2024/02/image.png" alt="The Guardian" />
+          <img src="https://suhanishah.com/wp-content/uploads/2024/02/image.png" alt="The Guardian" style="object-position:center center; object-fit:contain; padding:16px; background:#111;" />
           <span class="press-thumb-logo">The Guardian</span>
         </div>
         <div class="press-body">
@@ -884,7 +892,7 @@
       </a>
       <a href="https://www.news18.com/news/lifestyle/mentalist-suhani-shah-announces-her-silver-jubilee-india-tour-5869855.html" target="_blank" class="press-item">
         <div class="press-thumb">
-          <img src="https://suhanishah.com/wp-content/uploads/2023/01/Screenshot-2023-06-29-at-2.40-1.png" alt="News 18" />
+          <img src="https://suhanishah.com/wp-content/uploads/2023/01/Screenshot-2023-06-29-at-2.40-1.png" alt="News 18" style="object-position:center top;" />
           <span class="press-thumb-logo">News 18</span>
         </div>
         <div class="press-body">
@@ -895,7 +903,7 @@
       </a>
       <a href="https://worldmagicreview.com/2023/08/06/suhani-shah-spellbound/" target="_blank" class="press-item">
         <div class="press-thumb">
-          <img src="https://suhanishah.com/wp-content/uploads/2023/06/gallery5-1_1900x1140.webp" alt="World Magic Review" />
+          <img src="https://suhanishah.com/wp-content/uploads/2023/06/gallery5-1_1900x1140.webp" alt="World Magic Review" style="object-position:center 20%;" />
           <span class="press-thumb-logo">World Magic Review</span>
         </div>
         <div class="press-body">
@@ -906,7 +914,7 @@
       </a>
       <a href="https://economictimes.indiatimes.com/magazines/panache/what-is-a-mentalist-illusionist-magician-suhani-shah-has-the-answers/articleshow/96006048.cms" target="_blank" class="press-item">
         <div class="press-thumb">
-          <img src="https://suhanishah.com/wp-content/uploads/2023/06/Frame-234.png" alt="Economic Times" />
+          <img src="https://suhanishah.com/wp-content/uploads/2023/06/Frame-234.png" alt="Economic Times" style="object-position:center center; object-fit:contain; padding:20px; background:#0e0e0e;" />
           <span class="press-thumb-logo">Economic Times</span>
         </div>
         <div class="press-body">
@@ -917,7 +925,7 @@
       </a>
       <a href="https://timesofindia.indiatimes.com/life-style/spotlight/my-shows-tell-people-a-lot-about-themselves-says-mentalist-suhani-shah/articleshow/95427376.cms" target="_blank" class="press-item">
         <div class="press-thumb">
-          <img src="https://suhanishah.com/wp-content/uploads/2023/06/Frame-236.png" alt="Times of India" />
+          <img src="https://suhanishah.com/wp-content/uploads/2023/06/Frame-236.png" alt="Times of India" style="object-position:center center; object-fit:contain; padding:20px; background:#0e0e0e;" />
           <span class="press-thumb-logo">Times of India</span>
         </div>
         <div class="press-body">
@@ -928,7 +936,7 @@
       </a>
       <a href="https://www.thehindu.com/life-and-style/leisure/mentalist-suhani-shah-is-all-set-to-mesmerise-bangaloreans/article65970971.ece" target="_blank" class="press-item">
         <div class="press-thumb">
-          <img src="https://suhanishah.com/wp-content/uploads/2023/06/Frame-232.png" alt="The Hindu" />
+          <img src="https://suhanishah.com/wp-content/uploads/2023/06/Frame-232.png" alt="The Hindu" style="object-position:center center; object-fit:contain; padding:20px; background:#0e0e0e;" />
           <span class="press-thumb-logo">The Hindu</span>
         </div>
         <div class="press-body">
