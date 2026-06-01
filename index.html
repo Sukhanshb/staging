@@ -863,16 +863,19 @@
     const dots = document.querySelectorAll('.gallery-dot');
     const slots = [-2, -1, 0, 1, 2];
 
-    function getSlideEl(slot) {
-      return document.querySelector(`.gallery-slide[data-slot="${slot}"]`);
-    }
+    // Each slide element has a logical offset from center (-2 to 2)
+    // When navigating, we shift all offsets and update images + data-slot
+    const slideEls = Array.from(document.querySelectorAll('.gallery-slide'));
+    // Initial offsets match the HTML order: -2, -1, 0, 1, 2
+    let offsets = [-2, -1, 0, 1, 2];
 
     function renderGallery() {
-      slots.forEach(slot => {
-        const el = getSlideEl(slot);
-        if (!el) return;
+      slideEls.forEach((el, i) => {
+        const slot = offsets[i];
+        el.setAttribute('data-slot', slot);
         const idx = ((cur + slot) % imgs.length + imgs.length) % imgs.length;
-        el.querySelector('img').src = imgs[idx];
+        const img = el.querySelector('img');
+        if (img.src !== imgs[idx]) img.src = imgs[idx];
       });
       dots.forEach((d, i) => d.classList.toggle('active', i === cur));
     }
@@ -881,6 +884,14 @@
       if (busy) return;
       busy = true;
       cur = (cur + dir + imgs.length) % imgs.length;
+      // Shift all offsets in opposite direction so slides appear to move
+      offsets = offsets.map(o => {
+        let newO = o - dir;
+        // Wrap: if any slot goes beyond ±2, wrap to the other side
+        if (newO > 2) newO = -2;
+        if (newO < -2) newO = 2;
+        return newO;
+      });
       renderGallery();
       setTimeout(() => { busy = false; }, 780);
     }
@@ -891,7 +902,7 @@
     document.getElementById('galleryNext').addEventListener('click', () => go(1));
     document.getElementById('galleryPrev').addEventListener('click', () => go(-1));
 
-    // Click side slides
+    // Click side slides to navigate
     document.getElementById('galleryCarousel').addEventListener('click', e => {
       const slide = e.target.closest('.gallery-slide');
       if (!slide) return;
