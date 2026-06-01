@@ -110,6 +110,15 @@
     }
     .nav-links a:hover { color: var(--accent); }
     .nav-links a:hover::after { width: 100%; }
+    .nav-tickets {
+      color: var(--accent) !important;
+      border: 1px solid rgba(200,169,110,0.35);
+      padding: 6px 16px !important;
+      letter-spacing: 0.2em;
+      transition: background 0.3s, border-color 0.3s !important;
+    }
+    .nav-tickets::after { display: none !important; }
+    .nav-tickets:hover { background: rgba(200,169,110,0.1) !important; border-color: var(--accent) !important; }
 
     /* ── MOBILE NAV ── */
     .nav-hamburger {
@@ -150,6 +159,7 @@
     .mobile-menu.open a:nth-child(2) { transition-delay: 0.1s; }
     .mobile-menu.open a:nth-child(3) { transition-delay: 0.15s; }
     .mobile-menu.open a:nth-child(4) { transition-delay: 0.2s; }
+    .mobile-menu.open a:nth-child(5) { transition-delay: 0.25s; }
     .mobile-menu a:hover { color: var(--accent); }
     .mobile-menu-close {
       position: absolute; top: 24px; right: 24px;
@@ -391,13 +401,17 @@
 
     /* ── MOBILE GALLERY ── */
     @media (max-width: 768px) {
-      .gallery-carousel { height: 220px; }
+      .gallery-carousel { height: 240px; }
+      .gallery-slide {
+        transition: transform 0.5s ease, filter 0.5s ease, opacity 0.5s ease, box-shadow 0.5s ease;
+      }
       .gallery-slide[data-slot="-1"],
       .gallery-slide[data-slot="1"],
       .gallery-slide[data-slot="-2"],
       .gallery-slide[data-slot="2"] { opacity: 0 !important; pointer-events: none; }
       .gallery-slide[data-slot="0"] {
         width: 92%; box-shadow: none;
+        transform: translate(-50%, -50%) !important;
       }
       .gallery-btn { opacity: 1 !important; }
       .gallery-btn.prev-btn { left: 12px; }
@@ -420,6 +434,7 @@
     }
     .testimonials-heading em { font-style: italic; color: var(--accent); }
     .testimonials-track-wrap {
+      touch-action: pan-y;
       overflow: hidden;
       mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
       -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
@@ -648,7 +663,15 @@
       .nav-hamburger { display: flex; }
       .mobile-menu { display: flex; }
       .hero { padding: 0 24px 56px; }
+      .hero-photo { transform: none !important; }
       .hero-scroll { display: none; }
+      /* Simplify reveal animations on mobile to avoid glitch */
+      .reveal, .reveal-l, .reveal-r {
+        transform: translateY(16px);
+        transition: opacity 0.7s ease, transform 0.7s ease;
+      }
+      .reveal-l { transform: translateY(16px); }
+      .reveal-r { transform: translateY(16px); }
       .about { grid-template-columns: 1fr; gap: 40px; padding: 100px 24px; }
       .about::before { left: 24px; right: 24px; }
       .stats { padding: 0 24px 100px; }
@@ -661,8 +684,9 @@
       .testimonials-header { padding: 0 24px; }
       .videos { padding: 80px 24px; }
       .videos::before { left: 24px; right: 24px; }
-      .videos-grid { grid-template-columns: 1fr; }
+      .videos-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
       .videos-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .video-thumb { filter: grayscale(0%) brightness(0.6) !important; }
       .press { padding: 80px 24px; }
       .press::before { left: 24px; right: 24px; }
       .press-grid { grid-template-columns: 1fr; }
@@ -684,6 +708,7 @@
       <li><a href="#videos">Videos</a></li>
       <li><a href="#press">Press</a></li>
       <li><a href="shotlist.html">Shotlist</a></li>
+      <li><a href="https://suhanishah.com/tickets-live/" target="_blank" class="nav-tickets">Tickets</a></li>
     </ul>
     <button class="nav-hamburger" id="hamburger" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -697,6 +722,7 @@
     <a href="#videos" class="mobile-menu-link">Videos</a>
     <a href="#press" class="mobile-menu-link">Press</a>
     <a href="shotlist.html" class="mobile-menu-link">Shotlist</a>
+    <a href="https://suhanishah.com/tickets-live/" target="_blank" class="mobile-menu-link" style="color:var(--accent)">Tickets</a>
   </div>
 
   <!-- HERO -->
@@ -972,9 +998,11 @@
       nav.classList.toggle('scrolled', window.scrollY > 60);
     }, { passive: true });
 
-    // ── PARALLAX HERO ──
+    // ── PARALLAX HERO — desktop only ──
     const heroPhoto = document.getElementById('heroPhoto');
+    const isMobile = () => window.innerWidth <= 768;
     window.addEventListener('scroll', () => {
+      if (isMobile()) return;
       const y = window.scrollY;
       heroPhoto.style.transform = `translateY(${y * 0.35}px)`;
     }, { passive: true });
